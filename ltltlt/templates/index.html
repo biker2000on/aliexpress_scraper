@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2 class="is-size-1 has-text-centered">Items</h2>
+    <ul>
+        {% for item in item_list %}
+            <li>{{ item.item_name }}: {{ item.item_number }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
