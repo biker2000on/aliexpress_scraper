@@ -7,15 +7,15 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
-from .models import Item
+from .models import Item, Price
 from price_updater import scraper
 
 class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = 'index.html'
     model = Item
-    # def get_queryset(self):
-    #     """Return the last five published questions."""
-    #     return Item.objects.order_by('-created_date')[:5]
+    def get_queryset(self):
+        """Return the last five published questions."""
+        return Item.objects.filter(user=self.request.user)
 
 class ItemDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = 'item_detail.html'
@@ -48,10 +48,11 @@ def handleCreate(request):
     print(request)
     name = 'placeholder'
     number = request.POST['item_number']
-    name, img = scraper.getItemNameChrome(number)
+    name, img, price = scraper.getItemNameChrome(number)
     user = request.user
     item = Item(item_number=number, user=user, item_name=name, img_url=img)
     item.save()
+    item.price_set.create(price=price)
     return HttpResponseRedirect(reverse('ltltlt:index'))
 
 
@@ -64,7 +65,7 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('home')
+            return redirect('ltltlt:index')
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})

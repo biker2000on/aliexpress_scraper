@@ -4,7 +4,7 @@
 
 {% if item %}
 
-<article class="media">
+<article class="media box">
     <figure class="media-left">
         <p class="image is-128x128">
             <img src="{{ item.img_url }}" alt="product image">
@@ -13,7 +13,7 @@
     <div class="media-content">
         <div class="content">
             <h2 class="is-size-3">{{ item.item_name }}</h2>
-            <p><strong>Item Number: </strong>{{ item.item_number }}</p>
+            <p><strong>Item Number: </strong><a href="https://www.aliexpress.com/item/{{ item.item_number }}.html" target="_blank">{{ item.item_number }}</a></p>
             <p><strong>Added: </strong>{{ item.created_date }}</p>
         </div>
     </div>
@@ -35,11 +35,12 @@
         {% endfor %}
     </tbody>
 </table>
-
-<div id="chart"></div>
-<canvas id="myChart" width="700" height="400"></canvas>
-{% else %}
-<p>This item number does not exist.</p>
+<div class="tile is-8">
+    <div id="chart"></div>
+    <canvas id="myChart" width="700" height="400"></canvas>
+    {% else %}
+    <p>This item number does not exist.</p>
+</div>
 {% endif %}
 
 {{ prices|json_script:"data" }}
