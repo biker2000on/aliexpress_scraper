@@ -15,7 +15,7 @@ class IndexView(LoginRequiredMixin, generic.ListView):
     model = Item
     def get_queryset(self):
         """Return the last five published questions."""
-        return Item.objects.filter(user=self.request.user)
+        return Item.objects.filter(user=self.request.user) 
 
 class ItemDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = 'item_detail.html'
@@ -27,6 +27,10 @@ class ItemDetailView(LoginRequiredMixin, generic.DetailView):
         prices = Item.objects.get(id=self.kwargs['pk']).price_set.all().values()
         context['prices'] = list(prices)
         return context
+
+def getItems(request):
+    items = Item.objects.all().values()
+    return JsonResponse(list(items), safe=False)
 
 def getPrices(request, pk):
     prices = Item.objects.get(id=pk).price_set.all().values()
@@ -45,15 +49,21 @@ class ItemDelete(LoginRequiredMixin, generic.DeleteView):
 
 @login_required
 def handleCreate(request):
-    print(request)
-    name = 'placeholder'
-    number = request.POST['item_number']
-    name, img, price = scraper.getItemNameChrome(number)
-    user = request.user
-    item = Item(item_number=number, user=user, item_name=name, img_url=img)
-    item.save()
-    item.price_set.create(price=price)
-    return HttpResponseRedirect(reverse('ltltlt:index'))
+    try:
+        name = 'placeholder'
+        number = int(request.POST['item_number'])
+        numbers = [item.item_number for item in Item.objects.all()]
+        if number not in numbers:
+            name, img, price = scraper.getItemNameChrome(number)
+            user = request.user
+            item = Item(item_number=number, user=user, item_name=name, img_url=img)
+            item.save()
+            item.price_set.create(price=price)
+            return HttpResponseRedirect(reverse('ltltlt:index'))
+        else:
+            return HttpResponseRedirect(reverse('ltltlt:index'), {'errors':'errors'})
+    except:
+        return HttpResponseRedirect(reverse('ltltlt:index'), {'errors':'error message today.'})
 
 
 def signup(request):

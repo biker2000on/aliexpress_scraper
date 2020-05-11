@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+{% if errors %}
+<p>{{ errors }}</p>
+{% endif %}
+
 <h2 class="is-size-1 has-text-centered">Items</h2>
 
 <form action="/item/create" method="POST">
@@ -14,10 +19,11 @@
                 <p class="control">
                     <input class="input" type="number" name="item_number" id="item_number" value="Item Number">
                 </p>
+                <p class="help is-danger is-hidden" id="item_number_help">This item has already been added.</p>
             </div>
             <div class="field">
                 <p class="control">
-                    <input class="button is-primary" type="submit" value="Submit">
+                    <button class="button is-primary" type="submit" id="submit">Submit</button>
                 </p>
             </div>
         </div>
@@ -51,7 +57,31 @@
             let ask = confirm('Are you sure you want to delete this item.')
             if (!ask) e.preventDefault()
         })
+    
     }
+    var submitButton = document.getElementById('submit')
+
+    function onSubmit(items) {
+        let form = document.getElementsByTagName('form')[0]
+        form.addEventListener('submit', function(e) {
+            submitButton.classList.add('is-loading')
+            let el = document.getElementById('item_number')
+            if (items.includes(parseInt(el.value))) {
+                e.preventDefault()
+                let help = document.getElementById('item_number_help')
+                help.classList.remove('is-hidden')
+                el.classList.add('is-danger')
+                submitButton.classList.remove('is-loading')
+            } 
+        })
+    }
+
+    fetch('items')
+        .then(res => res.json())
+        .then(json => {
+            let numbers = json.map(c => c.item_number)
+            onSubmit(numbers)
+        })
 </script>
 {% else %}
 <p>Please add your first item from Aliexpress.</p>
