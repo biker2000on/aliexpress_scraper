@@ -1,10 +1,59 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2 class="is-size-1 has-text-centered">Items</h2>
-    <ul>
+<h2 class="is-size-1 has-text-centered">Items</h2>
+
+<form action="/item/create" method="POST">
+    {% csrf_token %}
+    <div class="field is-horizontal">
+        <div class="field-label is-normal">
+            <label class="label" for="item_number">Item Number</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <p class="control">
+                    <input class="input" type="number" name="item_number" id="item_number" value="Item Number">
+                </p>
+            </div>
+            <div class="field">
+                <p class="control">
+                    <input class="button is-primary" type="submit" value="Submit">
+                </p>
+            </div>
+        </div>
+    </div>
+</form>
+{% if item_list %}
+<table class="table is-bordered is-hoverable has-text-centered">
+    <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Item Number</th>
+            <th>Delete?</th>
+        </tr>
+    </thead>
+    <tbody>
         {% for item in item_list %}
-            <li>{{ item.item_name }}: {{ item.item_number }}</li>
+        <tr>
+            <td><a href="{% url 'ltltlt:item_detail' item.id %}">{{ item.item_name }}</a></td>
+            <td>{{ item.item_number }}</td>
+            <td><a href="{% url 'ltltlt:item_delete' item.id %}" class="delete is-medium has-background-danger"
+                    id="delete{{item.id}}" data-object-id="{{ item.id }}"></a></td>
+        </tr>
         {% endfor %}
-    </ul>
+    </tbody>
+</table>
+<script>
+    var elms = document.getElementsByClassName('delete');
+    for (let el of elms) {
+        const objectID = el.getAttribute('data-object-id');
+        el.addEventListener('click', function (e) {
+            let ask = confirm('Are you sure you want to delete this item.')
+            if (!ask) e.preventDefault()
+        })
+    }
+</script>
+{% else %}
+<p>Please add your first item from Aliexpress.</p>
+{% endif %}
 {% endblock %}

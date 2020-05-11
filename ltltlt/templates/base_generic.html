@@ -1,0 +1,55 @@
+<head>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'bulma.min.css' %}">
+  <title>LTLTLT Aliexpress</title>
+</head>
+
+<body>
+  <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a href="{% url 'ltltlt:index' %}" class="navbar-item is-size-2 has-text-black">LuoTuoLuoTuoLuoTuo</a>
+      <!-- <a class="navbar-item" href="https://bulma.io">
+        <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+      </a> -->
+
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+        data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="{% url 'ltltlt:index' %}">
+          Home
+        </a>
+
+      </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            {% if user.is_authenticated %}
+            <a class="button is-light" href="{% url 'logout' %}">
+              Log Out
+            </a>
+            {% else %}
+            <a class="button is-primary" href="{% url 'ltltlt:signup' %}">
+              <strong>Sign up</strong>
+            </a>
+            <a class="button is-light" href="{% url 'login' %}">
+              Log in
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+      {% block base %}
+      {% endblock %}
+
+</body>

@@ -1,0 +1,6 @@
+{% extends "form_generic.html" %}
+
+{% block form %}
+  <p class="is-size-2">Logged out!</p>  
+  <a class="is-link" href="{% url 'login'%}">Click here to login again.</a>
+{% endblock %}

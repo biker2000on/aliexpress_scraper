@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block base %}
+
+<section class="hero is-primary is-fullheight-with-navbar">
+    <div class="hero-body">
+      <div class="container">
+          
+          <div class="card">
+              <div class="card-content">
+                  {% block form %}
+                  
+                  {% endblock form %}
+              </div>
+          </div>
+        
+      </div>
+    </div>
+  </section>
+
+  
+{% endblock %}
