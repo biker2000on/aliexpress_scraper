@@ -4,7 +4,15 @@
   <h2 class="is-size-2">Sign up</h2>
   <form method="post" class="form">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% for field in form %}
+      <div class="field">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <div class="control">
+          <input type="{{ field.field.widget.input_type }}" class="input" name="{{ field.html_name }}">
+        </div>
+        <p class="help">{{ field.help_text }}</p>
+      </div>        
+    {% endfor %}
     <button type="submit" class="button is-primary">Sign up</button>
   </form>
 {% endblock %}
