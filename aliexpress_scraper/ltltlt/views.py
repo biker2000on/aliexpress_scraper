@@ -46,25 +46,23 @@ class ItemDelete(LoginRequiredMixin, generic.DeleteView):
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
 
-
 @login_required
 def handleCreate(request):
-    try:
-        name = 'placeholder'
-        number = int(request.POST['item_number'])
-        numbers = [item.item_number for item in Item.objects.all()]
-        if number not in numbers:
-            name, img, price = scraper.getItemNameChrome(number)
-            user = request.user
-            item = Item(item_number=number, user=user, item_name=name, img_url=img)
-            item.save()
-            item.price_set.create(price=price)
-            return HttpResponseRedirect(reverse('ltltlt:index'))
-        else:
-            return HttpResponseRedirect(reverse('ltltlt:index'), {'errors':'errors'})
-    except:
-        return HttpResponseRedirect(reverse('ltltlt:index'), {'errors':'error message today.'})
-
+    # try:
+    name = 'placeholder'
+    number = int(request.POST['item_number'])
+    numbers = [item.item_number for item in Item.objects.all()]
+    if number not in numbers:
+        name, img, price = scraper.getItemNameChrome(number)
+        user = request.user
+        item = Item(item_number=number, user=user, item_name=name, img_url=img)
+        item.save()
+        item.price_set.create(price=price)
+        return HttpResponseRedirect(reverse('ltltlt:index'))
+    else:
+        return HttpResponseRedirect(reverse('ltltlt:index'), {'errors': 'errors'})
+    # except:
+    #     return HttpResponseRedirect(reverse('ltltlt:index'), {'errors': 'error message today.'})
 
 def signup(request):
     if request.method == 'POST':
@@ -79,4 +77,3 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
-

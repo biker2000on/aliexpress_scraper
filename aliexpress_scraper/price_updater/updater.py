@@ -4,6 +4,6 @@ from price_updater import scraper
 
 def start():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(scraper.updatePrices, 'interval', minutes=60*24)
+    scheduler.add_job(scraper.updatePrices, 'interval', minutes=60 * 24)
     # scheduler.add_job(scraper.updatePrices, 'interval', minutes=5)
     scheduler.start()
