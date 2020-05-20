@@ -8,81 +8,87 @@
 
 <h2 class="is-size-1 has-text-centered">Items</h2>
 
-<form action="/item/create" method="POST">
-    {% csrf_token %}
-    <div class="field is-horizontal">
+<div class="columns is-centered">
+  <div class="column is-narrow">
+    <form action="/item/create" method="POST">
+      {% csrf_token %}
+      <div class="field is-horizontal">
         <div class="field-label is-normal">
-            <label class="label" for="item_number">Item Number</label>
+          <label class="label" for="item_number">Item Number</label>
         </div>
         <div class="field-body">
-            <div class="field">
-                <p class="control">
-                    <input class="input" type="number" name="item_number" id="item_number" value="Item Number">
-                </p>
-                <p class="help is-danger is-hidden" id="item_number_help">This item has already been added.</p>
-            </div>
-            <div class="field">
-                <p class="control">
-                    <button class="button is-primary" type="submit" id="submit">Submit</button>
-                </p>
-            </div>
+          <div class="field">
+            <p class="control">
+              <input class="input" type="number" name="item_number" id="item_number" value="Item Number">
+            </p>
+            <p class="help is-danger is-hidden" id="item_number_help">This item has already been added.</p>
+          </div>
+          <div class="field">
+            <p class="control">
+              <button class="button is-primary" type="submit" id="submit">Submit</button>
+            </p>
+          </div>
         </div>
-    </div>
-</form>
-{% if item_list %}
-<table class="table is-bordered is-hoverable has-text-centered">
-    <thead>
+      </div>
+    </form>
+    {% if item_list %}
+    <table class="table is-bordered is-hoverable has-text-centered">
+      <thead>
         <tr>
-            <th>Item Name</th>
-            <th>Item Number</th>
-            <th>Delete?</th>
+          <th style="max-width: 500px;">Item Name</th>
+          <th>Item Number</th>
+          <th>Latest Price</th>
+          <th>Delete?</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for item in item_list %}
         <tr>
-            <td><a href="{% url 'ltltlt:item_detail' item.id %}">{{ item.item_name }}</a></td>
-            <td>{{ item.item_number }}</td>
-            <td><a href="{% url 'ltltlt:item_delete' item.id %}" class="delete is-medium has-background-danger"
-                    id="delete{{item.id}}" data-object-id="{{ item.id }}"></a></td>
+          <td style="max-width: 500px;"><a href="{% url 'ltltlt:item_detail' item.id %}">{{ item.item_name }}</a></td>
+          <td>{{ item.item_number }}</td>
+          <td>${{ item.price_set.latest.price }}</td>
+          <td><a href="{% url 'ltltlt:item_delete' item.id %}" class="delete is-medium has-background-danger"
+              id="delete{{item.id}}" data-object-id="{{ item.id }}"></a></td>
         </tr>
         {% endfor %}
-    </tbody>
-</table>
-<script>
-    var elms = document.getElementsByClassName('delete');
-    for (let el of elms) {
+      </tbody>
+    </table>
+    <script>
+      var elms = document.getElementsByClassName('delete');
+      for (let el of elms) {
         const objectID = el.getAttribute('data-object-id');
         el.addEventListener('click', function (e) {
-            let ask = confirm('Are you sure you want to delete this item.')
-            if (!ask) e.preventDefault()
+          let ask = confirm('Are you sure you want to delete this item.')
+          if (!ask) e.preventDefault()
         })
-    
-    }
-    var submitButton = document.getElementById('submit')
 
-    function onSubmit(items) {
+      }
+      var submitButton = document.getElementById('submit')
+
+      function onSubmit(items) {
         let form = document.getElementsByTagName('form')[0]
-        form.addEventListener('submit', function(e) {
-            submitButton.classList.add('is-loading')
-            let el = document.getElementById('item_number')
-            if (items.includes(parseInt(el.value))) {
-                e.preventDefault()
-                let help = document.getElementById('item_number_help')
-                help.classList.remove('is-hidden')
-                el.classList.add('is-danger')
-                submitButton.classList.remove('is-loading')
-            } 
+        form.addEventListener('submit', function (e) {
+          submitButton.classList.add('is-loading')
+          let el = document.getElementById('item_number')
+          if (items.includes(parseInt(el.value))) {
+            e.preventDefault()
+            let help = document.getElementById('item_number_help')
+            help.classList.remove('is-hidden')
+            el.classList.add('is-danger')
+            submitButton.classList.remove('is-loading')
+          }
         })
-    }
+      }
 
-    fetch('items')
+      fetch('items')
         .then(res => res.json())
         .then(json => {
-            let numbers = json.map(c => c.item_number)
-            onSubmit(numbers)
+          let numbers = json.map(c => c.item_number)
+          onSubmit(numbers)
         })
-</script>
+    </script>
+  </div>
+</div>
 {% else %}
 <p>Please add your first item from Aliexpress.</p>
 {% endif %}
