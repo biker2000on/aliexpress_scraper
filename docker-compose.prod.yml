@@ -2,6 +2,7 @@ version: '3.7'
 
 services:
   web:
+    image: 192.168.0.50:5000/aliexpress:latest
     build: 
       context: ./aliexpress_scraper
       dockerfile: Dockerfile.prod
@@ -21,6 +22,7 @@ services:
     env_file: 
       - ./.env.prod.db
   nginx:
+    image: 192.168.0.50:5000/aliexpress_nginx:latest
     build: ./nginx
     ports:
       - 1337:80
