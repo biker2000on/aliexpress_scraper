@@ -1,6 +1,7 @@
 from selenium import webdriver
 import re
 from ltltlt.models import Price, Item
+from decimal import Decimal
 
 def _getUrl(itemNumber):
     return f'https://www.aliexpress.com/item/{itemNumber}.html'
@@ -8,7 +9,7 @@ def _getUrl(itemNumber):
 def _getPrice(text):
     pattern = r'\d+\.\d+'
     m = re.search(pattern, text)
-    return float(m[0])
+    return Decimal(m[0])
 
 def getItemPriceFirefox(itemNumber):
     options = webdriver.firefox.options.Options()
