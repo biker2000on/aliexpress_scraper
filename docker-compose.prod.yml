@@ -2,11 +2,11 @@ version: '3.7'
 
 services:
   web:
-    image: 192.168.4.50:5000/aliexpress:latest
+    image: biker2000on/aliexpress_scraper:latest
     restart: always
-    build: 
-      context: ./aliexpress_scraper
-      dockerfile: Dockerfile.prod
+    # build: 
+    #   context: ./aliexpress_scraper
+    #   dockerfile: Dockerfile.prod
     command: gunicorn aliexpress_scraper.wsgi:application --bind 0.0.0.0:8000
     expose:
       - 8000
