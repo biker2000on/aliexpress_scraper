@@ -6,8 +6,8 @@ To get started run:
 
 ```bash
 docker-compose -f docker-compose.prod.yml up -d --build
-docker-compose -f docker-compose.prod.yml exec python manage.py migrate --no-input
-docker-compose -f docker-compose.prod.yml exec python manage.py collectstatic --no-input
+docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --no-input
+docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input
 ```
 
 Then you are off and running. 
